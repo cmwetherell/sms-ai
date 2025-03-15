@@ -1,6 +1,11 @@
 import os
 from openai import OpenAI
 
+# add a logger
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 class AIResponder:
     def __init__(self):
         api_key = os.getenv("OPENAI_API_KEY")
@@ -10,6 +15,9 @@ class AIResponder:
 
     def generate_response(self, message: str) -> str:
         try:
+            # log the incoming message
+            logger.info(f"Incoming message: {message}")
+
             prompt = f'''
             You are responding to a text message.
             Keep your response short and concise as if you were texting (because you are).
@@ -23,6 +31,10 @@ class AIResponder:
                 tools=[{"type": "web_search_preview"}],
                 input=prompt
             )
+
+            # log response
+            logger.info(f"AI response: {response}")
+            
             return response.output_text
         except Exception as e:
             return f"Error generating response: {str(e)}"
