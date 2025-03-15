@@ -18,10 +18,11 @@ class AIResponder:
             Avoid unnecessary details and keep the tone friendly.
             '''
 
-            response = self.client.chat.completions.create(
-                model="gpt-4o",  # Using "gpt-4o" as specified
-                messages=[{"role": "user", "content": message}]
+            response = self.client.responses.create(
+                model="gpt-4o",
+                tools=[{"type": "web_search_preview"}],
+                input=prompt
             )
-            return response.choices[0].message.content
+            return response.output_text
         except Exception as e:
             return f"Error generating response: {str(e)}"
